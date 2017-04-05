@@ -1,0 +1,20 @@
+{
+  "request" : {
+    "url" : "sad",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "matches" : ".*sdf.*sad.*"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "user-sdaf/body-dfsdf.json",
+    "headers" : {
+      "Content-Type" : "text/xml;charset=ISO8859-1",
+      "Content-Language" : "en-IE",
+      "Transfer-Encoding" : "chunked",
+      "Date" : "Mon, 22 Aug 2016 09:57:13 GMT",
+      "Server" : "WebSphere Application Server/6.1"
+    }
+  }
+}
