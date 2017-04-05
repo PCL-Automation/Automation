@@ -1,0 +1,92 @@
+Ubuntu on Virtual Box
+
+Download and install VirtualBox from https://www.virtualbox.org/wiki/Downloads, keeping all default installation settings.
+Download Ubuntu 14.04.4 64bit PC (AMD64) from http://releases.ubuntu.com/14.04/.
+In VirtualBox, click new. Give the operating system any name you want.
+For "Type" select "Linux" and for "Version" select "Ubuntu (64-bit)".
+Allocate 4096 MB of RAM and click "Next".
+Create a virtual hard disk with type "VDI (VirtualBox Disk Image)", select "Dynamically allocated" and allocate 40 GB of space to it.
+Highlight the newly created virtual machine, and click "Settings".
+On the left-hand side pane, select "Display" and allocate 64 MB to "Video Memory".
+On the left-hand side pane, select "Network" and drop-down the "Advanced" settings and click "Port Forwarding".
+Add a new rule by clicking the button on the right-hand side.
+Enter 8010 in for both "Host Port" and "Guest Port".
+Exit out of the settings menu.
+Select the virtual machine you just created and click "Start".
+In the "Select start-up disk" window, click the folder icon and locate the image of Ubuntu that you downloaded earlier.
+Click "Start".
+Once Ubuntu boots up, select "Install Ubuntu".
+
+Leave the check-boxes unselected and click "Continue".
+Select "Erase disk and install Ubuntu" and click "Install Now". Click "Continue".
+Select the correct area by clicking on the map and click "Continue".
+Select the appropriate keyboard layout and click "Continue".
+Enter in login details and click "Continue".
+The installation will take a few minutes to complete. Once it is completed, Ubuntu will restart. Ubuntu may not restart, and if it doesn't, it is safe to close down the virtual machine and start it again.
+Once Ubuntu has restarted, login.
+In the VirtualBox window, select "Devices" then "Install Guest Additions CD Image. Select "Run".
+This will install features such as allowing you to change the resolution of Ubuntu through "View" then "Virtual Screen 1" in the VirtualBox window.
+Turn on Bidirectional Copy and Paste by going to "Devices", "Shared Clipboard" then "Bidirectional".
+Shutdown Ubuntu by opening the terminal (Ctrl + Alt + T) and typing the command: 
+sudo shutdown -h now
+
+Ubuntu Network Setup
+
+Start Ubuntu.
+Select "System Settings" (symbol below) and click "Network"
+Select "Manual" for "Method" and type "webproxy.prd.aib.pri" for "HTTP Proxy", "HTTPS Proxy" and "FTP Proxy", with the port number being 8080 for each
+Next, open Firefox, click the menu button in the top right of the window and click "Preferences".
+Select the "Advanced" tab on the left-hand side, then the "Network" tab from the top menu.
+Click "Settings..." beside "Connection".
+Select the "Manual proxy configuration" button and enter "wsdi" in "HTTP Proxy" and 8080 as the "Port".
+Select "Use this proxy server for all protocols".
+Clear the "No Proxy for" box, then copy and paste this in:
+localhost,
+Click "OK" and try to access any webpage. Firefox may give a security warning but just click "Advanced", "Add Exception.." and then "Confirm Security Exception".
+
+Docker Setup
+
+First, open the Terminal in Ubuntu (Ctrl + Alt + T).
+Type in the following commands:
+sudo apt-get update
+sudo apt-get install apt-transport-https ca-certificates
+sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --keyserver-options http-proxy="http://wsad:8080" --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+Next, open the file /etc/apt/sources.list.d/docker.list in a text editor. This can be done with the following command:
+sudo gedit /etc/apt/sources.list.d/docker.list
+Add the line:
+deb http://apt.dockerproject.org/repo ubuntu-trusty main
+Save the file and exit gedit.
+Next, type the following commands:
+sudo apt-get update
+sudo apt-get install docker-engine
+sudo service docker start
+Finally, open the /etc/default/docker file in gedit:
+sudo gedit /etc/default/docker
+Replace the contents of the file with the following text block:
+# Docker Upstart and SysVinit configuration file
+# Customize location of Docker binary (especially for development testing).
+#DOCKER="/usr/local/bin/docker"
+# Use DOCKER_OPTS to modify the daemon startup options.
+#DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"
+DOCKER_OPTS="-H tcp://0.0.0.0:4243 -H unix:///var/run/docker.sock --dns 10.255.24.26"
+# If you need Docker to use an HTTP proxy, it can also be specified here.
+export http_proxy="http://sadsad:8080/"
+Save and close gedit, and restart docker with:
+sudo restart docker
+
+Shared Folder Creation
+
+You will need to power off your VM for this, and discard any saved states of the machine.
+Once it is off, right click it in the VirtualBox window and click settings
+Click on the 'Shared Folders' tab in the settings menu
+Click the small add button on the right
+Click the drop-down menu for Folder Path, select 'other' and then navigate to the folder you want to share
+You can rename the folder here if you like
+Tick the auto-mount checkbox (this will save you the trouble of mounting it manually in Ubuntu) and click OK.
+Start Ubuntu and go your file system
+You should see the folder you shared under Computer in the Devices section in the sidebar. The folder will have 'sf_' added to the start of the name(You can also access it by going to Computer > media)
+If you click on it now it should say that you do not have access to the folder
+To fix this, open up a terminal window and enter the following command
+sudo adduser username vboxsf
+After entering your password you should see 'Adding user 'user' to group vboxsf
+Restart Ubuntu and you should now be able to access the folder
